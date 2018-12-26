@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>定时任务管理页面</title>
+    <link rel="stylesheet" th:href="@{/default/bootstrap/css/bootstrap.css}"/>
+    <link rel="stylesheet" th:href="@{/default/layer/skin/default/layer.css}"/>
+    <script type="text/javascript" th:src="@{/default/js/jquery2.1.4.min.js}"></script>
+    <script type="text/javascript" th:src="@{/default/bootstrap/js/bootstrap.js}"></script>
+    <script type="text/javascript" th:src="@{/default/layer/layer.js}"></script>
+</head>
+<body>
+
+<form class="form-inline" style="margin: 15px 5px 0 5px">
+    <div class="form-group">
+        <label for="jobNames">任务名称:</label>
+        <input onkeydown="return ClearSubmit(event)" type="text" class="form-control" id="jobNames"
+               placeholder="输入关键字后按回车以搜索"/>
+    </div>
+    <div class="form-group">
+        <label for="jobNames" style="margin-left: 5px;">任务状态:</label>
+        <select id="searchSelect" style="width: 80px;height: 32px;">
+            <option value="">全部</option>
+            <option value="ACQUIRED">正常执行</option>
+            <option value="WAITING">等待执行</option>
+            <option value="PAUSED">暂停任务</option>
+            <option value="BLOCKED">任务阻塞</option>
+            <option value="ERROR">任务错误</option>
+        </select>
+    </div>
+    <button id="search" type="button" class="btn btn-primary" aria-label="Left Align">
+        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 搜索
+    </button>
+
+    <hr/>
+
+    <button id="add" type="button" class="btn btn-success btn-sm">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增
+    </button>
+    <button id="update" type="button" class="btn btn-warning"><span class="glyphicon glyphicon-pencil"
+                                                                    aria-hidden="true"></span> 修改
+    </button>
+    <button id="manageBtn" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-cog"
+                                                                       aria-hidden="true"></span> 管理
+    </button>
+    <button id="show" type="button" class="btn btn-info"><span class="glyphicon glyphicon-eye-open"
+                                                               aria-hidden="true"></span> 查看
+    </button>
+    <button id="delBtn" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash"
+                                                                   aria-hidden="true"></span> 删除
+    </button>
+    <button id="cronBtn" type="button" class="btn btn-success"><span class="glyphicon glyphicon-dashboard"
+                                                                     aria-hidden="true"></span> CRON表达式生成器
+    </button>
+
+    <table id="quartz-content" class="table table-bordered table-hover" style="margin-top: 15px">
+        <thead>
+        <tr>
+            <th>选择</th>
+            <th style="display: none">任务Id</th>
+            <th>任务名称</th>
+            <th>任务组</th>
+            <th>描述</th>
+            <th>全类名</th>
+            <th>CRON表达式</th>
+            <th>任务状态</th>
+            <th>触发器名称</th>
+            <th>触发器组</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</form>
+
+<!-- Large modal -->
+<div id="quartzModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog"
+     aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel" style="color: #942a25"></h4>
+            </div>
+            <form id="q_from" class="form-inline">
+                <table style="margin-left: 10px;">
+                    <tr style="line-height: 50px;">
+                        <!--hidden-->
+                        <td>任务Id:</td>
+                        <td><input style="margin-left: 5px;" type="text" class="form-control" id="taskId"
+                                   name="id" placeholder="007"/></td>
+                    </tr>
+                    <tr style="line-height: 50px;">
+                        <td>任务名称:</td>
+                        <td><input style="margin-left: 5px;" type="text" class="form-control" id="taskName"
+                                   name="jobName"
+                                   placeholder="job01"/></td>
+                    </tr>
+                    <tr style="line-height: 50px;">
+                        <td>任务组:</td>
+                        <td><input style="margin-left: 5px;" type="text" class="form-control" id="taskGroup"
+                                   name="jobGroup"
+                                   placeholder="group01"/></td>
+                    </tr>
+                    <tr style="line-height: 50px;">
+                        <td>任务描述:</td>
+                        <td><input style="margin-left: 5px;" type="text" class="form-control" id="taskInfo"
+                                   name="description"
+                                   placeholder="This is my first task"/></td>
+                    </tr>
+                    <tr style="line-height: 50px;">
+                        <td>全类名:</td>
+                        <td><input style="margin-left: 5px;" type="text" class="form-control" id="className"
+                                   name="className"
+                                   placeholder="com.daimall.quartz.job.NewJob"/></td>
+                    </tr>
+                    <tr style="line-height: 50px;">
+                        <td>CRON:</td>
+                        <td><input style="margin-left: 5px;" type="text" class="form-control" id="cron"
+                                   name="cronExpression"
+                                   placeholder="0/20 * * * * ?"/></td>
+                    </tr>
+                    <tr style="line-height: 50px;">
+                        <td>触发器名称:</td>
+                        <td><input style="margin-left: 5px;" type="text" class="form-control" id="triggerName"
+                                   name="triggerName"
+                                   placeholder="trigger01"/></td>
+                    </tr>
+                    <tr style="line-height: 50px;">
+                        <td>触发器组:</td>
+                        <td><input style="margin-left: 5px;" type="text" class="form-control" id="triggerGroup"
+                                   name="triggerGroup"
+                                   placeholder="triggerGroup01"/></td>
+                    </tr>
+                    <tr style="line-height: 50px;">
+                        <td colspan="2">
+                            <button id="suBtn" style="float: right;margin-bottom: 10px;" type="button"
+                                    aria-label="Left Align">
+                                <span aria-hidden="true"></span>
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="manegeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel01" style="color:#1077da;">管理任务</h4>
+            </div>
+            <div id="t_content" class="modal-body">
+                <table>
+                    <tr>
+                        <td>任务名称：</td>
+                        <td id="jn" style="color: red;font-size: large;"></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="btn" class="modal-footer">
+                <button id="resume" type="button" class="btn btn-primary" data-dismiss="modal">恢复</button>
+                <button id="pause" type="button" class="btn btn-danger" data-dismiss="modal">暂停</button>
+                <button id="trigger" type="button" class="btn btn-success" data-dismiss="modal">触发</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script th:inline="javascript">
+
+    $(function () {
+        //显示页面数据
+        showList();
+
+        document.onkeydown = function (e) {
+            var ev = document.all ? window.event : e;
+            if (ev.keyCode == 13) {
+                return false;
+            }
+        }
+    });
+
+
+    $(document).on('click', 'table tr', function () {
+        $(this).find('input').prop('checked', 'checked');
+    });
+
+
+    $('#searchSelect').change(function () {
+        searchQuartzis();
+    })
+
+    //回车键查询
+    function ClearSubmit(e) {
+        if (e.keyCode == 13) {
+            searchQuartzis();
+        }
+    }
+
+    //cron
+    $('#cronBtn').click(function () {
+        layer.open({
+            type: 2,
+            title: 'CRON表达式生成器',
+            fix: false,
+            content: 'http://www.pppet.net/',
+            area: ['870px', '540px'],
+            scrollbar: true,
+            maxmin: true
+        });
+    });
+
+    //搜索
+    $('#search').click(function () {
+        searchQuartzis();
+    });
+
+    function searchQuartzis() {
+        var stateValue = $('#searchSelect').val();
+        var searchValue = $('#jobNames').val();
+        $.ajax({
+            type: 'POST',
+            url: '/job/list',
+            data: {jobStatus: stateValue, jobName: searchValue},
+            dataType: 'json',
+            success: function (result) {
+                console.log(result);
+                editData(result);
+            },
+            statusCode: {
+                405: function () {
+                    layer.alert("您无权限搜索")
+                }
+            }
+        });
+    }
+
+    //查看
+    $('#show').click(function () {
+        var item = $('input[name="time"]:checked');
+        var checkedLength = item.length;
+        if (checkedLength == 0) {
+            layer.alert("请选择一条数据", {icon: 1});
+            return;
+        }
+        $.ajax({
+            type: 'POST',
+            url: '/job/get/by/id',
+            data: {
+                id: $('input[name="time"]:checked').parent().parent().find('td').eq(1).text()
+            },
+            dataType: 'json',
+            success: function (result) {
+                var stateType = result.data.jobStatus;
+                var state = null;
+                var color = null;
+                switch (stateType) {
+                    case "WAITING":
+                        state = "等待执行";
+                        color = '#FFFF00';
+                        break;
+                    case "PAUSED":
+                        state = "暂停执行";
+                        color = '#FF0000';
+                        break;
+                    case "ACQUIRED":
+                        state = "正常执行";
+                        color = '#78BA32';
+                        break;
+                    case "BLOCKED":
+                        state = "任务阻塞";
+                        color = '#0000FF';
+                        break;
+                    case "ERROR":
+                        state = "任务错误";
+                        break;
+                    case "DIR":
+                        state = "找不到任务";
+                        break;
+                }
+                layer.tips('<span style="color:#0a130e">' + state + '</span>', '#show', {
+                    tips: [1, color]
+//                    area: ['50px', 'auto']
+                });
+            },
+            statusCode: {
+                405: function () {
+                    layer.alert("您无权限查看")
+                }
+            }
+        });
+
+    });
+
+
+    //删除任务
+    $('#delBtn').click(function () {
+        var item = $('input[name="time"]:checked');
+        var checkedLength = item.length;
+        if (checkedLength == 0) {
+            layer.alert("请选择一条数据", {icon: 6});
+            return;
+        }
+        //获取数据
+        var _jobId = item.parent().parent().find('td').eq(1).text();
+        var _jobName = item.parent().parent().find('td').eq(2).text();
+        var _jobGroup = item.parent().parent().find('td').eq(3).text();
+        layer.confirm('您是确认要删除任务【<b style="color: red">' + _jobName + '</b>】吗?', {
+            btn: ['取消', '确定'] //按钮
+        }, function (index) {
+            layer.close(index);
+        }, function () {
+            $.ajax({
+                type: 'POST',
+                url: '/job/remove',
+                data: {id: _jobId, jobName: _jobName, jobGroup: _jobGroup},
+                dataType: 'json',
+                success: function (result) {
+                    if (result.code == 0) {
+                        layer.msg('删除成功', function () {
+                            $('tbody').empty();
+
+                            showList();
+                        });
+                    } else if (result.code == 500) {
+                        layer.msg('删除失败:' + result.msg);
+                    }
+
+                },
+                statusCode: {
+                    405: function () {
+                        layer.alert("您无权限删除任务")
+                    }
+                }
+            });
+        });
+
+    });
+
+
+    //管理：恢复，停止，触发
+    $('#manageBtn').click(function () {
+        var item = $('input[name="time"]:checked');
+        var checkedLength = item.length;
+        if (checkedLength == 0) {
+            layer.alert("请选择一条数据", {icon: 6});
+            return;
+        }
+        $('#jn').text(item.parent().parent().find('td').eq(2).text());
+        $("#manegeModal").modal({
+            backdrop: "static"
+        });
+    });
+
+    //恢复
+    $(document).on('click', '#resume', function () {
+        var item = $('input[name="time"]:checked');
+        $.ajax({
+            type: 'POST',
+            url: '/job/resume',
+            data: {
+                jobName: item.parent().parent().find('td').eq(2).text(),
+                jobGroup: item.parent().parent().find('td').eq(3).text()
+            },
+            dataType: 'json',
+            success: function (result) {
+                if (result.code == 0) {
+                    layer.msg('恢复成功');
+                } else if (result.code == 500) {
+                    layer.msg('恢复失败:' + result.msg);
+                }
+                showList();
+            },
+            statusCode: {
+                405: function () {
+                    layer.alert("您无权限恢复任务")
+                }
+            }
+        });
+    });
+
+    //停止
+    $(document).on('click', '#pause', function () {
+        var item = $('input[name="time"]:checked');
+        $.ajax({
+            type: 'POST',
+            url: '/job/pause',
+            data: {
+                jobName: item.parent().parent().find('td').eq(2).text(),
+                jobGroup: item.parent().parent().find('td').eq(3).text()
+            },
+            dataType: 'json',
+            success: function (result) {
+                if (result.code == 0) {
+                    layer.msg('停止成功', {icon: 6});
+                } else if (result.code == 500) {
+                    layer.msg('停止失败:' + result.msg, {icon: 6});
+                }
+                showList();
+            },
+            statusCode: {
+                405: function () {
+                    layer.alert("您无权限停止任务")
+                }
+            }
+        });
+    });
+
+    //触发
+    $(document).on('click', '#trigger', function () {
+        var item = $('input[name="time"]:checked');
+
+        $.ajax({
+            type: 'POST',
+            url: '/job/trigger',
+            data: {
+                jobName: item.parent().parent().find('td').eq(2).text(),
+                jobGroup: item.parent().parent().find('td').eq(3).text()
+            },
+            dataType: 'json',
+            success: function (result) {
+                if (result.code == 0) {
+                    layer.msg('触发成功', {icon: 6});
+                } else if (result.code == 500) {
+                    layer.msg('触发失败:' + result.msg, {icon: 6});
+                }
+                showList();
+            },
+            statusCode: {
+                405: function () {
+                    layer.alert("您无权限触发任务")
+                }
+            }
+        });
+    });
+
+
+    //修改->打开模态框
+    $('#update').click(function () {
+        var checkedLength = $('input[name="time"]:checked').length;
+        if (checkedLength == 0) {
+            layer.alert("请选择一条数据", {icon: 6});
+            return;
+        }
+        $("#q_from table tbody").find('tr').eq(0).hide();
+
+        updateModel('修改任务', 'btn btn-warning btn-sm', ' 修改', 'glyphicon glyphicon-pencil', 'update');
+        //回显数据
+        var item = $('input[name="time"]:checked');
+        var r_jobId = item.parent().parent().find('td').eq(1).text();
+        var r_jobName = item.parent().parent().find('td').eq(2).text();
+        var r_jobGroup = item.parent().parent().find('td').eq(3).text();
+        var r_description = item.parent().parent().find('td').eq(4).text();
+        var r_className = item.parent().parent().find('td').eq(5).text();
+        var r_cronExpression = item.parent().parent().find('td').eq(6).text();
+        var r_triggerName = item.parent().parent().find('td').eq(8).text();
+        var r_triggerGroup = item.parent().parent().find('td').eq(9).text();
+
+        $('#taskId').val(r_jobId);
+        $('#taskName').val(r_jobName).attr("readonly", "value");
+        $('#taskGroup').val(r_jobGroup).attr("readonly", "value");
+        $('#taskInfo').val(r_description).attr("readonly", "value");
+        $('#className').val(r_className).attr("readonly", "value");
+        $('#cron').val(r_cronExpression);
+        // var split = r_triggerName.split(': ')[1];
+        $('#triggerName').val(r_triggerName).attr("readonly", "value");
+        // var split = r_triggerGroup.split(': ')[1];
+        $('#triggerGroup').val(r_triggerGroup).attr("readonly", "value");
+        $("#quartzModal").modal({
+            backdrop: "static"
+        });
+    });
+
+    //新增->打开模态框
+    $("#add").click(function () {
+        $("#q_from table tbody").find('tr').eq(0).hide();
+        $('#taskName').removeAttr("readonly").val("");
+        $('#taskGroup').removeAttr("readonly").val("");
+        $('#taskInfo').removeAttr("readonly").val("");
+        $('#className').removeAttr("readonly").val("");
+        $('#triggerName').removeAttr("readonly").val("");
+        $('#triggerGroup').removeAttr("readonly").val("");
+        $('#cron').val("");
+        updateModel('新增任务', 'btn btn-success btn-sm', ' 保存', 'glyphicon glyphicon-floppy-disk', 'save');
+        $("#quartzModal").modal({
+            backdrop: "static"
+        });
+    });
+
+    //判断按钮类型
+    $('#suBtn').click(function () {
+        //关闭模态框
+        $("#quartzModal").modal('hide');
+        var type = $('#suBtn').attr('subType');
+        if (type == 'save') {
+            q_save();
+        } else if (type == 'update') {
+            q_update();
+        }
+        ;
+    });
+
+    //提交修改任务
+    function q_update() {
+
+        var data = $('#q_from').serialize();
+
+        $.ajax({
+            type: 'POST',
+            url: '/job/update',
+            data: data,
+            dateType: 'json',
+            success: function (result) {
+                if (result.code == 0) {
+                    layer.msg('修改成功', {icon: 6});
+                } else if (result.code == 500) {
+                    layer.msg('修改失败:' + result.msg, {icon: 6});
+                }
+                showList();
+            },
+            statusCode: {
+                405: function () {
+                    layer.alert("您无权限修改")
+                }
+            }
+        });
+    }
+
+    //提交新增任务
+    function q_save() {
+        var data = $('#q_from').serialize();
+        $.ajax({
+            type: 'POST',
+            url: '/job/add',
+            data: data,
+            dataType: 'json',
+            success: function (result) {
+                if (result.code == 0) {
+                    layer.msg('新增成功', {icon: 6});
+                } else if (result.code == 500) {
+                    layer.msg('新增失败:' + result.msg);
+                }
+
+                //更新数据
+                showList();
+
+                //q_from清空内容
+                $('#q_from input').val('');
+            },
+            statusCode: {
+                405: function () {
+                    layer.alert("您无权限添加")
+                }
+            }
+        });
+    }
+
+    //改变模态框
+    function updateModel(title, btnClass, subBtn, subClass, type) {
+        $('#myModalLabel').text(title);
+        $('#suBtn').empty();
+        $('#suBtn').removeClass().addClass(btnClass).attr("subType", type);
+        var spanVal = $('<span></span>').removeClass().addClass(subClass);
+        $('#suBtn').append(spanVal).append(subBtn);
+    }
+
+    //获取数据
+    function showList() {
+        $.ajax({
+            type: "POST",
+            url: "/job/list",
+            dataType: "json",
+            cache: false,
+            success: function (result) {
+                //显示表格数据
+                if (result.code == 0) {
+                    editData(result);
+                }
+                //显示分页条
+            },
+            statusCode: {
+                405: function () {
+                    layer.alert("您无权限访问")
+                }
+            }
+        });
+
+    }
+
+    //遍历数据并显示
+    function editData(result) {
+        $('#quartz-content tbody').empty();
+        var quartzList = result.data;
+        $.each(quartzList, function (index, item) {
+            var stateType = item.jobStatus;
+            var state = null;
+            switch (stateType) {
+                case "WAITING":
+                    state = "等待执行";
+                    break;
+                case "PAUSED":
+                    state = "暂停执行";
+                    break;
+                case "ACQUIRED":
+                    state = "正常执行";
+                    break;
+                case "BLOCKED":
+                    state = "任务阻塞";
+                    break;
+                case "ERROR":
+                    state = "任务错误";
+                    break;
+            }
+
+            var checkBox = $("<input/>").attr("type", "radio")
+                .attr("class", "check_item").attr("name", "time")
+            // .attr("oldJobName", item.jobName)
+            // .attr("oldJobGroup", item.jobGroup);
+            var checkBoxTd = $("<td></td>").attr('align', 'center').append(checkBox);
+            var jobIdTd = $("<td></td>").append(item.id).css("display", "none");
+            var jobNameTd = $("<td></td>").append(item.jobName);
+            var jobGroupTd = $("<td></td>").append(item.jobGroup);
+            var descTd = $("<td></td>").append(item.description);
+            var classNameTd = $("<td></td>").append(item.className);
+            var cronTd = $("<td></td>").append(item.cronExpression);
+            var stateTd = $("<td></td>").append(state);
+            var triggerNameTd = $("<td></td>").append(item.triggerName);
+            var triggerGroupTd = $("<td></td>").append(item.triggerGroup);
+            $("<tr></tr>").append(checkBoxTd)
+                .append(jobIdTd)
+                .append(jobNameTd)
+                .append(jobGroupTd)
+                .append(descTd)
+                .append(classNameTd)
+                .append(cronTd)
+                .append(stateTd)
+                .append(triggerNameTd)
+                .append(triggerGroupTd)
+                .appendTo("#quartz-content tbody");
+        });
+    }
+</script>
+</html>

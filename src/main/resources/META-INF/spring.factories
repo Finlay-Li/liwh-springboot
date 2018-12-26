@@ -1,0 +1,2 @@
+org.springframework.boot.env.EnvironmentPostProcessor=\
+com.dodou.liwh.mybatis.config.DefaultMybatisEnvironmentPostProcessor

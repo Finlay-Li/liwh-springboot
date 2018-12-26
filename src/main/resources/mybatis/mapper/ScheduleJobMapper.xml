@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dodou.liwh.quartz.dao.mapper.ScheduleJobMapper">
+
+    <sql id="baseColumnSql">
+            id, class_name, cron_expression, QRTZ_SCHEDULE_JOB.job_name, QRTZ_SCHEDULE_JOB.job_group, QRTZ_SCHEDULE_JOB.trigger_name, QRTZ_SCHEDULE_JOB.trigger_group,
+            QRTZ_SCHEDULE_JOB.description
+    </sql>
+
+
+    <select id="getAllJob" resultType="com.dodou.liwh.quartz.dao.model.ScheduleJob">
+        SELECT <include refid="baseColumnSql"></include>,
+        QRTZ_TRIGGERS.TRIGGER_STATE AS jobStatus,QRTZ_TRIGGERS.TRIGGER_TYPE
+        FROM QRTZ_SCHEDULE_JOB
+        LEFT JOIN QRTZ_TRIGGERS ON QRTZ_SCHEDULE_JOB.job_name = QRTZ_TRIGGERS.JOB_NAME
+        WHERE
+        TRIGGER_TYPE = 'CRON'
+        <if test="jobName != null and jobName != ''">
+            AND QRTZ_SCHEDULE_JOB.job_name = #{jobName}
+        </if>
+        <if test="jobStatus != null and jobStatus != ''">
+            AND QRTZ_TRIGGERS.TRIGGER_TYPE = #{jobStatus}
+        </if>
+    </select>
+
+    <select id="getJobById" resultType="com.dodou.liwh.quartz.dao.model.ScheduleJob">
+        SELECT <include refid="baseColumnSql"></include>,
+        QRTZ_TRIGGERS.TRIGGER_STATE AS jobStatus,QRTZ_TRIGGERS.TRIGGER_TYPE
+        FROM QRTZ_SCHEDULE_JOB
+        LEFT JOIN QRTZ_TRIGGERS ON QRTZ_SCHEDULE_JOB.job_name = QRTZ_TRIGGERS.JOB_NAME
+        WHERE TRIGGER_TYPE = 'CRON' and id = #{id}
+    </select>
+</mapper>

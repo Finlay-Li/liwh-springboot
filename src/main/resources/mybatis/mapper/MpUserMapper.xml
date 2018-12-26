@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dodou.liwh.mybatis.dao.mapper.MpUserMapper">
+    <select id="selectPageVo" resultType="com.dodou.liwh.mybatis.dao.model.MpUser">
+        SELECT * FROM d_user
+    </select>
+
+    <select id="queryById" resultType="com.dodou.liwh.mybatis.dao.model.MpUser">
+        SELECT * FROM d_user
+        WHERE id = #{id}
+    </select>
+</mapper>
