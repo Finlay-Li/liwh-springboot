@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 /**
  * @author: Liwh
@@ -16,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
  * @date: 2018-11-23 3:51 PM
  */
 @Configuration
-@MapperScan({"com.dodou.liwh.mybatis.dao.mapper","com.dodou.liwh.quartz.dao.mapper"})
+@MapperScan({"com.dodou.liwh.mybatis.dao.mapper", "com.dodou.liwh.quartz.dao.mapper"})
 public class MybatisConfig {
     //更换为druid数据源
     @Bean
@@ -25,6 +26,13 @@ public class MybatisConfig {
     public DruidDataSource druidDataSource() {
         DruidDataSource dataSource = new DruidDataSource();
         return dataSource;
+    }
+
+    @Bean(name = "transactionManager")
+    public DataSourceTransactionManager transactionManager() {
+        DataSourceTransactionManager manager = new DataSourceTransactionManager();
+        manager.setDataSource(druidDataSource());
+        return manager;
     }
 
     //PaginationInterceptor
