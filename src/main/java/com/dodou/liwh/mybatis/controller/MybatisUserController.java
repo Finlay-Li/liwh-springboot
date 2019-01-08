@@ -34,6 +34,7 @@ public class MybatisUserController {
     private AsyncTaskService asyncTaskService;
     @Autowired
     private DataSourceTransactionManager transactionManager;
+
     @RequestMapping(value = "/user/{id}", produces = {"application/json;charset=utf-8"})
     public MpUser queryById(@PathVariable("id") Long id) {
         MpUser mpUser = mpUserService.queryById(id);
@@ -70,14 +71,13 @@ public class MybatisUserController {
         } catch (Exception e) {
             //catch----无法回滚
             //手动
-            System.out.println("--------------------其他");
+
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            asyncTaskService.other(mpUser);
         }
-        asyncTaskService.other(mpUser);
+        System.out.println("--------------------其他");
         return list;
     }
-
-
 
 
 }
