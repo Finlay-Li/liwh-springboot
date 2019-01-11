@@ -3,6 +3,7 @@ package com.dodou.liwh.mybatis.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dodou.liwh.mybatis.dao.model.MpUser;
 import com.dodou.liwh.mybatis.service.MpUserService;
+import com.dodou.liwh.mybatis.service.TestService;
 import com.dodou.liwh.taskexecutor.AsyncTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -31,9 +32,7 @@ public class MybatisUserController {
     @Autowired
     private MpUserService mpUserService;
     @Autowired
-    private AsyncTaskService asyncTaskService;
-    @Autowired
-    private DataSourceTransactionManager transactionManager;
+    private TestService testService;
 
     @RequestMapping(value = "/user/{id}", produces = {"application/json;charset=utf-8"})
     public MpUser queryById(@PathVariable("id") Long id) {
@@ -54,30 +53,14 @@ public class MybatisUserController {
         return page;
     }
 
-    @RequestMapping(value = "/batchAdd")
-    @Transactional(rollbackFor = Exception.class)
-    public List<MpUser> batchAdd() {
-        //批量插入不重复时：Set<MpUser> set = Sets.newConcurrentHashSet();
-        List<MpUser> list = new ArrayList<>();
-        MpUser mpUser = new MpUser();
+    @RequestMapping(value = "/async")
+    public String batchAdd() {
         try {
-            mpUser.setAge(18);
-            mpUser.setName("test");
-            mpUser.setUserEmail("test@qq.com");
-//        mpUserService.saveBatch(list,3);
-            mpUserService.save(mpUser);
-
-            throw new RuntimeException("中断测试");
+            testService.test();
         } catch (Exception e) {
-            //catch----无法回滚
-            //手动
-
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            asyncTaskService.other(mpUser);
+            return "fail:" + e.getMessage();
         }
-        System.out.println("--------------------其他");
-        return list;
+        return "success";
     }
-
 
 }

@@ -32,6 +32,7 @@ public class TaskExecutorConfig implements AsyncConfigurer {
         executor.setMaxPoolSize(10);
         executor.setCorePoolSize(5);
         executor.setQueueCapacity(20);
+        executor.setThreadNamePrefix("Liwh-TestAsync-");
         //配置后初始化线程池
         executor.initialize();
         return executor;

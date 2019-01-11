@@ -28,12 +28,12 @@ public class MybatisConfig {
         return dataSource;
     }
 
-    @Bean(name = "transactionManager")
-    public DataSourceTransactionManager transactionManager() {
-        DataSourceTransactionManager manager = new DataSourceTransactionManager();
-        manager.setDataSource(druidDataSource());
-        return manager;
-    }
+//    @Bean(name = "transactionManager")
+//    public DataSourceTransactionManager transactionManager() {
+//        DataSourceTransactionManager manager = new DataSourceTransactionManager();
+//        manager.setDataSource(druidDataSource());
+//        return manager;
+//    }
 
     //PaginationInterceptor
     @Bean
