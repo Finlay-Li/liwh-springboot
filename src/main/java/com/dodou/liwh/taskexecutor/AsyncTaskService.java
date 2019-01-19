@@ -56,5 +56,6 @@ public class AsyncTaskService {
 //        if (1 == 1) {
 //            throw new RuntimeException("中断测试");
 //        }
+        int i = 1 / 0;
     }
 }

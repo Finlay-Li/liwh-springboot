@@ -58,6 +58,7 @@ public class MybatisUserController {
         try {
             testService.test();
         } catch (Exception e) {
+            System.out.println(e.getMessage()+"--------------------------");
             return "fail:" + e.getMessage();
         }
         return "success";

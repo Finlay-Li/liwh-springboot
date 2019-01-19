@@ -25,8 +25,6 @@ public class TestService {
     @Autowired
     private MpUserService mpUserService;
 
-    @Async
-    @Transactional
     public void test() {
         //批量插入不重复时：Set<MpUser> set = Sets.newConcurrentHashSet();
         List<MpUser> list = new ArrayList<>();
@@ -34,7 +32,7 @@ public class TestService {
         mpUser.setAge(18);
         mpUser.setName("test");
         mpUser.setUserEmail("test@qq.com");
-        mpUserService.save(mpUser);
+//        mpUserService.save(mpUser);
         asyncTaskService.other1(mpUser);
         System.out.println("--------------------其他");
     }
