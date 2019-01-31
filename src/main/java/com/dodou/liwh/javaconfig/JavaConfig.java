@@ -22,7 +22,7 @@ public class JavaConfig {
     @Bean
     public UseFunctionService useFunctionService() {
         UseFunctionService useFunctionService = new UseFunctionService();
-        useFunctionService.setFunctionService(functionService());
+//        useFunctionService.setFunctionService(functionService());
         return useFunctionService;
     }
 }

@@ -1,6 +1,7 @@
 package com.dodou.liwh.javaconfig;
 
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author: Liwh
@@ -12,6 +13,7 @@ import lombok.Data;
 @Data
 public class UseFunctionService {
 
+    @Autowired
     private FunctionService functionService;
 
     public String sayHello() {

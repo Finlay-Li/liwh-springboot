@@ -1,5 +1,7 @@
 package com.dodou.liwh.javaconfig;
 
+import org.springframework.stereotype.Component;
+
 /**
  * @author: Liwh
  * @ClassName: FunctionService
@@ -7,6 +9,7 @@ package com.dodou.liwh.javaconfig;
  * @version: 1.0.0
  * @date: 2018-11-10 3:29 PM
  */
+//@Component
 public class FunctionService {
 
     public String sayHello() {
