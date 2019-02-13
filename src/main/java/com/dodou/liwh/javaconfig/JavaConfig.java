@@ -25,4 +25,9 @@ public class JavaConfig {
 //        useFunctionService.setFunctionService(functionService());
         return useFunctionService;
     }
+
+    @Bean
+    a a() {
+        return new a();
+    }
 }

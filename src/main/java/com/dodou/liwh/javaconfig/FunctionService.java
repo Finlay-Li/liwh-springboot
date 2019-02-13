@@ -1,5 +1,6 @@
 package com.dodou.liwh.javaconfig;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,4 +16,6 @@ public class FunctionService {
     public String sayHello() {
         return "hello:javaConfig!";
     }
+    @Autowired
+    private a a;
 }
