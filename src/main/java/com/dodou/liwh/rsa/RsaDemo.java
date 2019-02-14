@@ -49,7 +49,7 @@ public class RsaDemo {
 
             //2.私钥加密，公钥解密----加密
             //使用PKCS8EncodedKeySpec转换为可以适配的密钥
-            PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKeyByte);
+            PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(Base64.decodeBase64(encodePrivateKey));
             //通过工厂生成
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             PrivateKey generatePrivate = keyFactory.generatePrivate(pkcs8EncodedKeySpec);
@@ -58,16 +58,16 @@ public class RsaDemo {
             cipher.init(Cipher.DECRYPT_MODE, generatePrivate);
             byte[] bytes = src.getBytes();//BadPaddingException
             byte[] encryptResult = cipher.doFinal(bytes);
-            //Base64：把二进制转换成String
+            //Base64：把二进制转换成String & 加盐
             logger.error("私钥加密，公钥解密----加密结果：" + Base64.encodeBase64String(encryptResult));
 
             //3.私钥加密，公钥解密----解密
-            X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKeyByte);//java底层 RSA公钥只支持X509EncodedKeySpec这种格式
+            X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(Base64.decodeBase64(encodePublicKey));//java底层 RSA公钥只支持X509EncodedKeySpec这种格式
             PublicKey generatePublic = keyFactory.generatePublic(x509EncodedKeySpec);
             cipher = Cipher.getInstance("RSA");
             cipher.init(Cipher.DECRYPT_MODE, generatePublic);
             byte[] decryptResult = cipher.doFinal(encryptResult);
-            logger.error("私钥加密，公钥解密----解密结果：" + Base64.encodeBase64String(decryptResult));
+            logger.error("私钥加密，公钥解密----解密结果：" + new String(decryptResult));
 
             //4.私钥解密，公钥加密----加密----与上相反
             //5.私钥解密，公钥加密----解密----与上相反
