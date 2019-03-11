@@ -37,7 +37,8 @@ public class QrServiceImpl {
 
     public static String create(String qrData, Integer width, Integer height) {
         String base64;
-        final String DATA_PREFIX = "data:image/jpeg;base64,";
+         final String DATA_PREFIX = "data:image/";
+         final String DATA_SUFFIX = ";base64,";
         //1、定义二维码参数
         HashMap hints = new HashMap<>();
         //编码
@@ -56,8 +57,13 @@ public class QrServiceImpl {
             //使用toByteArray()方法转换成字节数组
             byte[] imageInByte = os.toByteArray();
             os.close();
-            base64 = DATA_PREFIX + Base64.getEncoder().encodeToString(imageInByte);
-
+//            base64 = DATA_PREFIX + Base64.getEncoder().encodeToString(imageInByte);
+            StringBuilder result = new StringBuilder();
+            result.append(DATA_PREFIX);
+            result.append("png");
+            result.append(DATA_SUFFIX);
+            result.append(Base64.getEncoder().encodeToString(imageInByte));
+            base64 = result.toString();
         } catch (Exception e) {
             throw new RuntimeException("生成二维码错误：" + e.getMessage(), e);
         }
@@ -67,7 +73,7 @@ public class QrServiceImpl {
 
     /*参数未知，不晓得是base64还是图片，请自己实现*/
     public static void res(String imageStr) {
-        String base64Str = StringUtils.substringAfterLast(imageStr, "data:image/jpeg;base64,");
+        String base64Str = StringUtils.substringAfterLast(imageStr, ";base64,");
         MultiFormatReader multiFormatReader = new MultiFormatReader();
         byte[] decode = Base64.getDecoder().decode(base64Str);
         ByteArrayInputStream inputStream = new ByteArrayInputStream(decode);
