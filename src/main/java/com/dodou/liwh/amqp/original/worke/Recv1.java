@@ -18,7 +18,7 @@ public class Recv1 {
 
     private final static String QUEUE_NAME = "test_queue_work";
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws Exception, InterruptedException {
         //获取连接
         Connection connection = MQConnectUtil.getConnection();
         //获取通道

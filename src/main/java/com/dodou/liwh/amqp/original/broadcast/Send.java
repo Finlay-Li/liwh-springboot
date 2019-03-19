@@ -5,6 +5,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * @author: Lwh
@@ -16,7 +17,7 @@ import java.io.IOException;
 public class Send {
     private final static String EXCHANGE_NAME = "test_exchange_fanout";
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception, TimeoutException {
         Connection connection = MQConnectUtil.getConnection();
         Channel channel = connection.createChannel();
         //声明交换机

@@ -5,6 +5,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * @author: Lwh
@@ -17,7 +18,7 @@ public class Send {
 
     private final static String EXCHANGE_NAME = "test_exchange_direct";
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException, InterruptedException, Exception {
         //获取连接
         Connection connection = MQConnectUtil.getConnection();
         //获取通道

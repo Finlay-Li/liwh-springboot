@@ -1,6 +1,8 @@
 package com.dodou.liwh.mybatis.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.dodou.liwh.amqp.boot.Receiver;
+import com.dodou.liwh.amqp.boot.Sender;
 import com.dodou.liwh.mybatis.dao.model.MpUser;
 import com.dodou.liwh.mybatis.service.MpUserService;
 import com.dodou.liwh.mybatis.service.TestService;
@@ -33,6 +35,8 @@ public class MybatisUserController {
     private MpUserService mpUserService;
     @Autowired
     private TestService testService;
+    @Autowired
+    Sender sender;
 
     @RequestMapping(value = "/user/{id}", produces = {"application/json;charset=utf-8"})
     public MpUser queryById(@PathVariable("id") Long id) {
@@ -64,4 +68,8 @@ public class MybatisUserController {
         return "success";
     }
 
+    @RequestMapping(value = "/mq")
+    public void mq() {
+       sender.send();
+    }
 }

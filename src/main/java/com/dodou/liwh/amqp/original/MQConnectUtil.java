@@ -15,7 +15,7 @@ import java.io.IOException;
  */
 public class MQConnectUtil {
 
-    public static Connection getConnection(){
+    public static Connection getConnection() throws Exception{
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("127.0.0.1");
         factory.setPort(5672);

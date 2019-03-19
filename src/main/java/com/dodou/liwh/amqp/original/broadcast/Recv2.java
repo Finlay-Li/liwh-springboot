@@ -22,7 +22,7 @@ public class Recv2 {
     //绑定交换机
     private final static String EXCHANGE_NAME = "test_exchange_fanout";
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException, Exception {
         Connection connection = MQConnectUtil.getConnection();
         //拿到操纵者
         Channel channel = connection.createChannel();

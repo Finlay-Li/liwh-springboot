@@ -17,7 +17,7 @@ import java.io.IOException;
 public class Recv {
     private final static String QUEUE_NAME = "test_queue";
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws Exception, InterruptedException {
         Connection connection = MQConnectUtil.getConnection();
         Channel channel = connection.createChannel();
         channel.queueDeclare(QUEUE_NAME, false, false, false, null);
