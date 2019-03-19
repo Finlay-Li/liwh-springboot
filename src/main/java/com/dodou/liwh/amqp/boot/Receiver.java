@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * @date: 2019-03-19 6:50 PM
  */
 @Component
-@RabbitListener(queues = "hello")
+@RabbitListener(queues = "hello")//与发布的队列名称要一致
 public class Receiver {
 
     /*消费消息*/

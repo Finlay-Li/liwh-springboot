@@ -23,7 +23,7 @@ public class Sender {
     public void send() {
         String msg = "hello boot 1.5.6 amqp" + new Date();
         System.out.println(msg);
-//        rabbitTemplate.convertAndSend(msg);
+//        rabbitTemplate.convertAndSend(msg);//缺少队列名称
         rabbitTemplate.convertAndSend("hello",msg);
     }
 }
