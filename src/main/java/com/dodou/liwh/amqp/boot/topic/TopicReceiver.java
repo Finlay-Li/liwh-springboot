@@ -32,7 +32,7 @@ public class TopicReceiver {
             channel.basicAck(tag, false);
         } catch (Exception e) {
             try {
-                // 消费失败，重新发送消息
+                // TODO 消费失败,那么我们可以进行容错处理,比如转移当前消息进入其它队列
                 channel.basicNack(tag, false, true);
             } catch (IOException e1) {
                 throw new RuntimeException(e1);
