@@ -1,11 +1,8 @@
 package com.dodou.test;
 
 import com.dodou.liwh.Application;
-import com.dodou.liwh.amqp.boot.Sender;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.env.Environment;
 
 /**

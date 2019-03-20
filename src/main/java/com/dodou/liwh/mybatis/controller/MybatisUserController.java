@@ -1,25 +1,15 @@
 package com.dodou.liwh.mybatis.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.dodou.liwh.amqp.boot.Receiver;
-import com.dodou.liwh.amqp.boot.Sender;
+import com.dodou.liwh.amqp.boot.hello.HelloSender;
 import com.dodou.liwh.mybatis.dao.model.MpUser;
 import com.dodou.liwh.mybatis.service.MpUserService;
 import com.dodou.liwh.mybatis.service.TestService;
-import com.dodou.liwh.taskexecutor.AsyncTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author: Liwh
@@ -36,7 +26,7 @@ public class MybatisUserController {
     @Autowired
     private TestService testService;
     @Autowired
-    Sender sender;
+    HelloSender helloSender;
 
     @RequestMapping(value = "/user/{id}", produces = {"application/json;charset=utf-8"})
     public MpUser queryById(@PathVariable("id") Long id) {
@@ -70,6 +60,6 @@ public class MybatisUserController {
 
     @RequestMapping(value = "/mq")
     public void mq() {
-       sender.send();
+       helloSender.send();
     }
 }

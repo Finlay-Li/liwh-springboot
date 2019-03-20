@@ -1,4 +1,4 @@
-package com.dodou.liwh.amqp.boot;
+package com.dodou.liwh.amqp.boot.hello;
 
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RabbitListener(queues = "hello")//与发布的队列名称要一致
-public class Receiver {
+public class HelloReceiver {
 
     /*消费消息*/
     @RabbitHandler

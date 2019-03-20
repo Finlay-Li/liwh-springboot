@@ -1,4 +1,4 @@
-package com.dodou.liwh.amqp.boot;
+package com.dodou.liwh.amqp.boot.hello;
 
 import org.springframework.amqp.core.Queue;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
  * @date: 2019-03-19 6:53 PM
  */
 @Configuration
-public class RabbitConfig {
+public class HelloConfig {
 
     @Bean
     public Queue helloQueue() {

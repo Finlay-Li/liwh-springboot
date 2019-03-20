@@ -1,7 +1,8 @@
 package com.dodou.test;
 
-import com.dodou.liwh.amqp.boot.Receiver;
-import com.dodou.liwh.amqp.boot.Sender;
+import com.dodou.liwh.amqp.boot.direct.DirectSender;
+import com.dodou.liwh.amqp.boot.hello.HelloSender;
+import com.dodou.liwh.amqp.boot.topic.TopicSender;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,13 +16,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class MQTest extends ApplicationTest {
 
     @Autowired
-    Sender sender;
+    HelloSender hello;
+
     @Autowired
-    Receiver receiver;
+    DirectSender directSender;
+    @Autowired
+    TopicSender topicSender;
+
 
     @Test
     public void send() {
-        sender.send();
+        hello.send();
     }
 
+    @Test
+    public void direct() {
+        directSender.send();
+    }
+
+    @Test
+    public void topic() {
+        topicSender.send();
+    }
 }
