@@ -36,6 +36,10 @@ public class MQTest extends ApplicationTest {
 
     @Test
     public void topic() {
-        topicSender.send();
+        try {
+            topicSender.send();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -4,6 +4,7 @@ import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,17 +25,10 @@ public class DirectConfig {
         return direct_ex;
     }
 
-    /*消费者*/
-    @Bean
-    Queue queue() {
-        Queue direct_que = new Queue("direct.que");
-        return direct_que;
-    }
-
     /*队列绑定交换机：Boot自动绑定，因为一个模型只有一个配置类：DirectConfig是不能同名的*/
     @Bean
-    Binding binding(DirectExchange directExchange, Queue queue) {
-        Binding binding = BindingBuilder.bind(queue).to(directExchange).with("direct.rout.key");
+    Binding binding(DirectExchange directExchange, Queue directQueue) {
+        Binding binding = BindingBuilder.bind(directQueue).to(directExchange).with("direct.rout.key");
         return binding;
     }
 }
