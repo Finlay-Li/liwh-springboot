@@ -158,7 +158,12 @@
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
 
-
+        <!--netty ws-->
+        <dependency>
+            <groupId>org.yeauty</groupId>
+            <artifactId>netty-websocket-spring-boot-starter</artifactId>
+            <version>0.7.5</version>
+        </dependency>
     </dependencies>
 
     <build>
