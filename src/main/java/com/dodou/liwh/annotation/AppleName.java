@@ -13,7 +13,8 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD, ElementType.METHOD})
 @Documented
 public @interface AppleName {
-    String setName() default "";
+    String name() default "";//default 表示参数的默认值
 
-    String value() default "";
+    String value() default "";//value（）是默认方法，调用时可以不写
+
 }

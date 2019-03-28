@@ -1,6 +1,5 @@
 package com.dodou.liwh.annotation;
 
-import lombok.Data;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,7 +12,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class AnnotationAction {
 
-    @AppleName(setName = "我吃苹果")
+    //使用了@AppleName注解，满足aop切入点方法：进行切入
+    @AppleName(name = "我吃苹果")
     public void eat() {
+        //被切入的方法
     }
 }

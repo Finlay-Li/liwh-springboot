@@ -13,8 +13,10 @@ public class Main {
 
     public static void main(String[] args) {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AopConfig.class);
+        //已标注@AppleName的类
         AnnotationAction annotationAction = (AnnotationAction) context.getBean("annotationAction");
         annotationAction.eat();
+        //未标注@AppleName的类
         MethodAction methodAction = (MethodAction) context.getBean("methodAction");
         methodAction.eat();
     }
