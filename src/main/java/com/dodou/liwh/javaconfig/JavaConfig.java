@@ -1,7 +1,5 @@
 package com.dodou.liwh.javaconfig;
 
-import com.dodou.liwh.javaconfig.FunctionService;
-import com.dodou.liwh.javaconfig.UseFunctionService;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 
@@ -26,8 +24,8 @@ public class JavaConfig {
         return useFunctionService;
     }
 
-    @Bean
-    a a() {
-        return new a();
-    }
+//    @Bean
+//    a a() {
+//        return new a();
+//    }
 }

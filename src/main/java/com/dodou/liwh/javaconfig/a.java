@@ -7,5 +7,10 @@ package com.dodou.liwh.javaconfig;
  * @version: 1.0.0
  * @date: 2019-02-03 1:16 AM
  */
-public class a {
+public abstract  class a {
+    private int a;
+
+    public a(int a){
+        this.a=a;
+    }
 }
