@@ -7,12 +7,15 @@ package com.dodou.liwh.pattern.creational.singleton;
  * @date: 2019-05-06 3:02 PM
  */
 public class LazySingleton {
-    private LazySingleton() {
-    }
 
     //定义一个对象属性，并提供一个创建其对象的方法，让开发者去调用创建
     private volatile static LazySingleton lazySingleton = null;
 
+    private LazySingleton() {
+        if (lazySingleton != null) {
+            throw new RuntimeException("单例构造器禁止反射调用");
+        }
+    }
     //必须是静态的方法，否则开发者怎么调啊...
     public static LazySingleton getInstance() {
 
