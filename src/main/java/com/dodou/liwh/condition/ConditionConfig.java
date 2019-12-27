@@ -1,6 +1,7 @@
 package com.dodou.liwh.condition;
 
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Conditional;
@@ -18,14 +19,15 @@ import org.springframework.stereotype.Component;
 public class ConditionConfig {
 
     @Bean
-    @Conditional(MacCondition.class)
+//    @Conditional(MacCondition.class)
     public CmdListService getMacCmdService() {
         return new MacCmdServiceImpl();
     }
 
     @Bean
-    @Conditional(WindowsCondition.class)
+//    @Conditional(WindowsCondition.class)
     public CmdListService getWindowsCmdService() {
         return new WindowsCmdServiceImpl();
     }
+
 }

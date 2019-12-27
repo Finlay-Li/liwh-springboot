@@ -1,7 +1,5 @@
 package com.dodou.liwh.condition;
 
-import org.springframework.stereotype.Service;
-
 /**
  * @author: Liwh
  * @ClassName: MacCmdServiceImpl

@@ -16,6 +16,7 @@ public class MacCondition implements Condition {
     public boolean matches(ConditionContext conditionContext, AnnotatedTypeMetadata annotatedTypeMetadata) {
         String property = conditionContext.getEnvironment().getProperty("os.name");
         String property2 = conditionContext.getEnvironment().getProperty("spring.application.name");
-        return property.contains("Mac OS X");
+        boolean isContains = property.contains("Mac OS X");
+        return isContains;
     }
 }

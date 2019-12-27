@@ -33,7 +33,7 @@ public class TestService {
         mpUser.setName("test");
         mpUser.setUserEmail("test@qq.com");
 //        mpUserService.save(mpUser);
-        asyncTaskService.other1(mpUser);
+//        asyncTaskService.other1(mpUser);
         System.out.println("--------------------其他");
     }
 
